@@ -1,14 +1,14 @@
-bootstrap-hexagone
+Bootstrap-hexagone
 ==================
 
 boostrap-hexagone a css and scss for hexagone spans in rows
 
 import bootstrap-hexagone.css and just play with it!
 
-## Html Intgreation
+## Html Integration
 see index.html
 
-## Html Intgreation ( how to? )
+## Html Integration over view...
 
 	<div class="container">
 		<!-- Example row of columns -->
