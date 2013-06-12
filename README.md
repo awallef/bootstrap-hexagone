@@ -6,6 +6,9 @@ boostrap-hexagone a css and scss for hexagone spans in rows
 import bootstrap-hexagone.css and just play with it!
 
 ## Html Intgreation
+see index.html
+
+## Html Intgreation ( how to? )
 
 	<div class="container">
 		<!-- Example row of columns -->
