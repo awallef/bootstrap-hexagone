@@ -1,0 +1,171 @@
+/**
+ *    ________                  
+ *    \_____  \___  _____  _  __
+ *      _(__  <\  \/  /\ \/ \/ /
+ *     /       \>    <  \     / 
+ *    /______  /__/\_ \  \/\_/  
+ *           \/      \/         
+ *	
+ *	-- scss & css by 3xw sàrl --
+ *	Copyright 2013 Wallef Antoine 
+ *
+ *	Licensed under the Apache License, Version 2.0.
+ *
+ *		
+**/
+
+@import "compass";
+@import "compass/css3";
+
+$hex-width : 0px;
+$hex-margin-left: 0px;
+$hex-translate-left-1 :0px;
+$hex-height : 0px;
+$hex-hyp: 0px;
+$hex-margin-top:  0px; 
+$hex-translate-top-1 : 0px;
+$hex-translate-top-2 :0px;
+$hex-translate-left-2 : 0px;
+$hex-gap : 0px;
+$hex-row-margin-height: 0px;
+$hex-span-members : 1 2 3 4 5 6;
+
+@function bootstrap_hexagone_set_vars(){
+	$hex-translate-left-1 :0px;
+	$hex-height : $hex-width / sqrt(3);
+	$hex-hyp: sqrt( (pow( $hex-width, 2) + pow( $hex-height, 2)) );
+	$hex-margin-top:  ( sqrt( pow( $hex-height, 2 ) - pow( $hex-width / 2, 2 )  ) + sqrt( pow( 2 * $hex-margin-left, 2 )  - pow( $hex-margin-left , 2 ) ) ) / 2 ; 
+	$hex-translate-top-1 : -1 * ( $hex-hyp / 2 );
+	$hex-translate-top-2 : -1 * ( $hex-height / 2);
+	$hex-translate-left-2 : -1 *  ( ( $hex-hyp - $hex-width ) / 2 );
+	$hex-gap : ( $hex-width / 2 ) + ( 2 * $hex-margin-left );
+	$hex-row-margin-height: sqrt( pow( $hex-height, 2 ) - pow( $hex-width / 2, 2 )  ) - $hex-margin-top;
+	@return '0px';
+}
+
+@mixin bootstrap_hexagone_make_span( $hex-span-number, $w ){
+	$hex-width : $w;
+	$hex-make : bootstrap_hexagone_set_vars();
+	.row-hex-spacer-#{$hex-span-number} { height: $hex-row-margin-height; }
+	.hexagone-#{$hex-span-number}.row-hex-gap { margin-left: $hex-gap ; }
+	.hexagone-#{$hex-span-number} { width:$hex-width; height:$hex-height;	@include background-size( auto $hex-hyp ); margin:$hex-margin-top $hex-margin-left; }
+	.hexagone-#{$hex-span-number} .corner-1:before,
+	.hexagone-#{$hex-span-number} .corner-2:before { width: $hex-hyp; height:	$hex-hyp; }
+	.hexagone-#{$hex-span-number} .corner-1:before { @include transform( rotate(-60deg) translate( $hex-translate-top-1, $hex-translate-left-1) );}
+	.hexagone-#{$hex-span-number} .corner-2:before { @include transform( rotate(60deg) translate( $hex-translate-top-2, $hex-translate-left-2) );}	
+}
+
+@mixin bootstrap_hexagone_make_mobile_span( $hex-span-number ){
+	.row-hex-spacer-#{$hex-span-number} { height: 0px; }
+	.hexagone-#{$hex-span-number}.row-hex-gap { margin-left: 0px ; }
+	.hexagone-#{$hex-span-number} { width:100%; height:160px;	@include background-size( auto ); margin:0; }	
+}
+
+@mixin bootstrap_hexagone_make_span_familly( $span-width, $span-gutter ){
+	$hex-margin-left: $span-gutter  / 2;
+	.row-hex{ margin: 0 ( -1 * $hex-margin-left ); }
+	@each $member in $hex-span-members {
+		$w : ( $member * $span-width ) + ( ( $member - 1 ) * $span-gutter );
+		@include bootstrap_hexagone_make_span( $member, $w );
+	}
+}
+
+@mixin bootstrap_hexagone_make_mobile_span_familly(){
+	$hex-margin-left: 0px;
+	.row-hex{ margin: 0 0; }
+	@each $member in $hex-span-members {
+		@include bootstrap_hexagone_make_mobile_span( $member );
+	}
+}
+
+@mixin bootstrap_hexagone(){
+
+[class*="hexagone"] {
+	background-color: #ccc;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;										
+	position: relative;
+	float:left;
+	text-align:center;
+	zoom:1;
+}
+
+[class*="hexagone"] a {
+	display:block;
+	width: 100%;
+	height:100%;
+	text-indent:-9999em;
+	position:absolute;
+	top:0;
+	left:0;
+}
+
+[class*="hexagone"] .corner-1,
+[class*="hexagone"] .corner-2 {
+	position: absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background: inherit;								
+	z-index:-2;						
+	overflow:hidden;		
+	@include backface-visibility( hidden );			
+}
+
+[class*="hexagone"] .corner-1 {
+	z-index:-1;
+	@include transform( rotate(60deg) );
+}
+
+[class*="hexagone"] .corner-2 {
+	@include transform( rotate(-60deg) );
+}
+
+[class*="hexagone"] .corner-1:before,
+[class*="hexagone"] .corner-2:before {
+	content: '';
+	position: absolute;
+	background: inherit;
+	top:0;
+	left: 0;
+	z-index: 1;
+	background: inherit;
+	background-repeat:no-repeat;
+	@include backface-visibility( hidden );				  
+}			
+
+
+[class*="hexagone"] .corner-1:before {	
+	@include transform-origin( 0, 0) ;
+}			
+
+[class*="hexagone"] .corner-2:before {	
+	bottom:0;
+}	
+
+[class*="row-hex-spacer"] {
+	width: 100;
+	clear: both;
+}
+
+/* Desktop and Tablet
+**********************************/
+@include bootstrap_hexagone_make_span_familly( 60px , 20px );
+@media ( min-width: 1200px ){ @include bootstrap_hexagone_make_span_familly( 70px , 30px ); }
+@media (min-width: 768px) and (max-width: 979px) { @include bootstrap_hexagone_make_span_familly( 42px , 20px ); }
+
+/* Mobile
+**********************************/
+@media (max-width: 767px) {
+	[class*="hexagone"] .corner-1,
+	[class*="hexagone"] .corner-2 {
+		display: none;
+	}
+	@include bootstrap_hexagone_make_mobile_span_familly();
+}
+
+// end mixin
+}
+
+@include bootstrap_hexagone();
